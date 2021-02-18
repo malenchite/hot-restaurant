@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hot Restaurant</title>
+  <!-- Latest compiled and minified CSS & JS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <h1 class="text-center">Hot Restaurant</h1>
+      <h3 class="text-center"> Current Reservations and Waiting List</h3>
+      <hr>
+      <div class="text-center">
+        <a href="/reserve"> <button class="btn btn-danger btn-lg"><span class="fa fa-plus"></span> Make
+            Reservations</button>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12"></div>
+      <div class="card">
+        <div class="card-header">
+          <h4> Current Reservations</h4>
+        </div>
+        <div class="card-body">
+          <ul id="tableList" class="list-group"></ul>
+        </div>
+        <div class="card mt-4"></div>
+        <div class="card-header">
+          <h4> Waiting List</h4>
+        </div>
+        <div class="card-body">
+          <ul id="waitList" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  <footer class="footer">
+    <div class="container">
+      <p>
+        <a id="clear-link" href="/tables"> Clear Table</a>
+        <a href="/api/tables"> API Table Link</a>
+        |
+        <a href="/api/waitlist">API Wait List</a>
+      </p>
+    </div>
+  </footer>
+
+  </div>
+
+  <script type="text/javascript">
+    const waitlistEl = document.getElementById('waitList');
+    const resEl = document.getElementById('tableList');
+    fetch(`/api/tables`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        data.forEach(person => {
+          const listItem = document.createElement('li');
+          const name = document.createElement('p');
+          const phoneNumber = document.createElement('p');
+          const email = document.createElement('p');
+          const id = document.createElement('p');
+          name.textContent = `Name: ${person.name}`
+          phoneNumber.textContent = `Phone Number: ${person.phone}`
+          email.textContent = `Email: ${person.email}`
+          id.textContent = `ID: ${person.uniqueId}`
+          listItem.append(name);
+          listItem.append(phoneNumber);
+          listItem.append(email);
+          listItem.append(id);
+          resEl.append(listItem);
+        })
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    fetch(`/api/waitlist`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        data.forEach(person => {
+          const listItem = document.createElement('li');
+          const name = document.createElement('p');
+          const phoneNumber = document.createElement('p');
+          const email = document.createElement('p');
+          const id = document.createElement('p');
+          name.textContent = `Name: ${person.name}`
+          phoneNumber.textContent = `Phone Number: ${person.phone}`
+          email.textContent = `Email: ${person.email}`
+          id.textContent = `ID: ${person.uniqueId}`
+          listItem.append(name);
+          listItem.append(phoneNumber);
+          listItem.append(email);
+          listItem.append(id);
+          waitlistEl.append(listItem);
+        })
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    $("#clear-link").click((event) => {
+      fetch(`/api/clear`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => alert("Clearing..."))
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  </script>
+</body>
+
+</html>
